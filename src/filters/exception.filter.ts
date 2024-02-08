@@ -35,6 +35,10 @@ export class AllExceptionFilter implements ExceptionFilter {
       .switchToHttp()
       .getResponse<Response>()
       .status(exception.getStatus())
-      .send(exception.getResponse());
+      .send({
+        name: exception.name,
+        message: exception.message,
+        statusCode: exception.getStatus(),
+      });
   }
 }

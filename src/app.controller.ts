@@ -2,10 +2,13 @@ import {
   BadRequestException,
   Controller,
   Get,
+  Param,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthGuard } from './guards/auth.guard';
+import { AlwaysFailedPipe } from './pipes/always-failed.pipe';
 
 @Controller()
 export class AppController {
@@ -29,6 +32,12 @@ export class AppController {
   @Get('guard')
   @UseGuards(AuthGuard)
   throwExceptionByGuard() {
+    return;
+  }
+
+  @Get('pipe')
+  @UsePipes(AlwaysFailedPipe)
+  throwValidationPipe(@Param() params: never) {
     return;
   }
 }

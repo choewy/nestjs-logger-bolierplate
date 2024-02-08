@@ -41,7 +41,6 @@ graph TD
   IncomingRequest(Incoming Request) --> Middlewares --> ExceptionFilters --> Response(Server Response)
   Guards --> PreInterceptors --> Pipes --> Handlers --> PostInterceptors --> Filters
   style ExceptionFilters fill:#0000001a,stroke-dasharray: 5 5
-
 ```
 
 ## elk-docker
