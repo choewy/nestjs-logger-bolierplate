@@ -2,14 +2,14 @@ import { Request, Response } from 'express';
 
 import { ArgumentsHost, HttpException } from '@nestjs/common';
 
-export class HttpLog {
-  context: string;
-  message = '';
-  status: number;
-  method: string;
-  url: string;
+export class HttpLogVo {
+  readonly context: string;
+  readonly message = '';
+  readonly status: number;
+  readonly method: string;
+  readonly url: string;
 
-  request: {
+  readonly request: {
     ip: string;
     xforwardedfor: string;
     params: Record<string, unknown>;
@@ -17,27 +17,18 @@ export class HttpLog {
     body: unknown;
   };
 
-  exception: {
+  readonly exception: {
     name: string;
     message: string;
     cause: unknown;
   };
 
   constructor(context: ArgumentsHost, exception?: HttpException) {
-    this.setContextName(context);
-    this.setRequest(context);
-    this.setException(exception);
-  }
-
-  private setContextName(context: ArgumentsHost) {
-    this.context = context.switchToHttp().getRequest().context;
-  }
-
-  private setRequest(context: ArgumentsHost) {
     const http = context.switchToHttp();
     const request = http.getRequest<Request>();
     const response = http.getResponse<Response>();
 
+    this.context = http.getRequest().context;
     this.status = response.statusCode;
     this.method = request.method;
     this.url = request.url;
@@ -48,9 +39,7 @@ export class HttpLog {
       query: request.query,
       body: request.body,
     };
-  }
 
-  private setException(exception?: HttpException) {
     if (exception) {
       this.status = exception.getStatus();
       this.exception = {
