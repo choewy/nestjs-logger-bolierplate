@@ -1,4 +1,8 @@
 - pipeline.id: main
   path.config: /usr/share/logstash/pipeline/logstash.conf
-- pipeline.id: serverlog
-  path.config: /usr/share/logstash/pipeline/serverlog.conf
+- pipeline.id: verbose
+  path.config: /usr/share/logstash/pipeline/verbose.conf
+- pipeline.id: warn
+  path.config: /usr/share/logstash/pipeline/warn.conf
+- pipeline.id: error
+  path.config: /usr/share/logstash/pipeline/error.conf
