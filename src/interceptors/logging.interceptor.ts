@@ -7,7 +7,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 
-import { HttpLogDto } from 'src/utils/logger/log.dto';
+import { HttpLog } from 'src/utils/logger/dto/http-log.dto';
 
 export class LoggingInterceptor implements NestInterceptor {
   constructor(private readonly logger: Logger) {}
@@ -19,6 +19,6 @@ export class LoggingInterceptor implements NestInterceptor {
 
     return next
       .handle()
-      .pipe(tap(() => this.logger.verbose(new HttpLogDto(context))));
+      .pipe(tap(() => this.logger.verbose(new HttpLog(context))));
   }
 }

@@ -8,7 +8,7 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { HttpLogDto } from 'src/utils/logger/log.dto';
+import { HttpLog } from 'src/utils/logger/dto/http-log.dto';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
@@ -29,7 +29,7 @@ export class AllExceptionFilter implements ExceptionFilter {
       type = 'error';
     }
 
-    this.logger[type](new HttpLogDto(host, exception));
+    this.logger[type](new HttpLog(host, exception));
 
     host
       .switchToHttp()

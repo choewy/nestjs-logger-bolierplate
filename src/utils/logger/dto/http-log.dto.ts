@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import { ArgumentsHost, HttpException } from '@nestjs/common';
 
-export class HttpLogDto {
+export class HttpLog {
   context: string;
   message = '';
   status: number;
