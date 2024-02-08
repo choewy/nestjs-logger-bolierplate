@@ -10,7 +10,7 @@ async function bootstrap() {
     logger: new WinstonLogger().create(),
   });
 
-  app.useGlobalFilters(new AllExceptionFilter());
+  app.useGlobalFilters(new AllExceptionFilter(new Logger()));
   app.useGlobalInterceptors(new LoggingInterceptor(new Logger()));
 
   await app.listen(3000);

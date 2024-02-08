@@ -1,5 +1,11 @@
-import { BadRequestException, Controller, Get } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  UseGuards,
+} from '@nestjs/common';
 import { AppService } from './app.service';
+import { AuthGuard } from './guards/auth.guard';
 
 @Controller()
 export class AppController {
@@ -18,5 +24,11 @@ export class AppController {
   @Get('error')
   throwError(): string {
     throw new Error('test error');
+  }
+
+  @Get('guard')
+  @UseGuards(AuthGuard)
+  throwExceptionByGuard() {
+    return;
   }
 }

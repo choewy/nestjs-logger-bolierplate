@@ -1,39 +1,46 @@
 import { Request, Response } from 'express';
 
-import { ExecutionContext, HttpException } from '@nestjs/common';
+import { ArgumentsHost, HttpException } from '@nestjs/common';
 
-export class HttpLogWithExecutionContextDto {
-  readonly context: string;
-  readonly message = '';
+export class HttpLogDto {
+  context: string;
+  message = '';
+  status: number;
+  method: string;
+  url: string;
 
-  readonly status: number;
-  readonly method: string;
-  readonly url: string;
-
-  readonly request: {
-    readonly ip: string;
-    readonly xforwardedfor: string;
-    readonly params: Record<string, unknown>;
-    readonly query: Record<string, unknown>;
-    readonly body: unknown;
+  request: {
+    ip: string;
+    xforwardedfor: string;
+    params: Record<string, unknown>;
+    query: Record<string, unknown>;
+    body: unknown;
   };
 
-  readonly exception: {
+  exception: {
     name: string;
     message: string;
     cause: unknown;
   };
 
-  constructor(context: ExecutionContext, exception?: HttpException) {
+  constructor(context: ArgumentsHost, exception?: HttpException) {
+    this.setContextName(context);
+    this.setRequest(context);
+    this.setException(exception);
+  }
+
+  private setContextName(context: ArgumentsHost) {
+    this.context = context.switchToHttp().getRequest().context;
+  }
+
+  private setRequest(context: ArgumentsHost) {
     const http = context.switchToHttp();
     const request = http.getRequest<Request>();
     const response = http.getResponse<Response>();
 
-    this.context = (context.getClass() ?? context.getHandler()).name;
     this.status = response.statusCode;
     this.method = request.method;
     this.url = request.url;
-
     this.request = {
       ip: request.ip,
       xforwardedfor: request.headers['x-forwarded-for'] as string,
@@ -41,7 +48,9 @@ export class HttpLogWithExecutionContextDto {
       query: request.query,
       body: request.body,
     };
+  }
 
+  private setException(exception?: HttpException) {
     if (exception) {
       this.status = exception.getStatus();
       this.exception = {
