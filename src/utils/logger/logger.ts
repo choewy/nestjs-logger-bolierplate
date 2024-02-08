@@ -7,8 +7,22 @@ import { DailyRotateFileTransportOptions } from 'winston-daily-rotate-file';
 import { LogLevel } from '@nestjs/common';
 
 export class WinstonLogger {
+  private readonly LEVEL = Symbol.for('level');
+
   create() {
     return WinstonModule.createLogger(this.getWinstonModuleOptions());
+  }
+
+  private getFormatByLevel(level: LogLevel) {
+    const format = winston.format((info) => {
+      if (info[this.LEVEL] === level) {
+        return info;
+      } else {
+        return false;
+      }
+    });
+
+    return format();
   }
 
   private getDefaultFormats() {
@@ -38,6 +52,7 @@ export class WinstonLogger {
       maxSize,
       maxFiles,
       format: winston.format.combine(
+        this.getFormatByLevel(level),
         winston.format.timestamp(),
         winston.format.json(),
       ),
@@ -54,6 +69,7 @@ export class WinstonLogger {
 
     transports.push(
       new DailyRotateFile(this.getDailyTransportOptions('verbose')),
+      new DailyRotateFile(this.getDailyTransportOptions('warn')),
       new DailyRotateFile(this.getDailyTransportOptions('error')),
     );
 
