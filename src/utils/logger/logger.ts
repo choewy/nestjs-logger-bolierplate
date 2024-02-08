@@ -27,8 +27,8 @@ export class WinstonLogger {
     const dirname = './logs';
     const filename = ['%DATE%', level, 'log'].join('.');
     const datePattern = 'YYYY-MM-DD';
-    const maxSize = '250m';
-    const maxFiles = '7d';
+    const maxSize = '500mb';
+    const maxFiles = '3d';
 
     return {
       level,
